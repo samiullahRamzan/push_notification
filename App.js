@@ -2,6 +2,7 @@
 import messaging from "@react-native-firebase/messaging";
 import { useEffect } from "react";
 import {
+  Alert,
   PermissionsAndroid,
   Platform,
   StyleSheet,
@@ -50,6 +51,15 @@ const App = () => {
     requestUserPermission();
     getToken();
   });
+
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      console.log("remote message", remoteMessage);
+      Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, []);
 
   return (
     <View style={styles.container}>
